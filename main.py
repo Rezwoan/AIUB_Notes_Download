@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 import time
 import os
 import shutil
@@ -29,6 +30,20 @@ driver.find_element(By.TAG_NAME, "form").submit()
 
 # Wait for the page to load after login
 time.sleep(5)
+
+# Check if login was successful by looking for the text "Welcome" on the page
+try:
+    # Search for an element that contains "Welcome"
+    if "Welcome" in driver.page_source:
+        print("Login successful!")
+    else:
+        print("Login failed.")
+        driver.quit()  # Exit if login failed
+        exit()
+except NoSuchElementException:
+    print("Login failed.")
+    driver.quit()
+    exit()
 
 # Find all links with the text "TSF" and prepare the links list
 tsf_links = []

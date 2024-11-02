@@ -70,20 +70,29 @@ for link in tsf_links:
     #downloading files for course {label}
     print(f"Downloading files for course: {label}")
 
-    # Find download links and download each file if it doesn’t already exist
+    # Find download links and download each file if it doesn’t already exist in the label folder
     download_links = driver.find_elements(By.XPATH, "//a[contains(@href, 'DownloadDocument2')]")
     for download_link in download_links:
         download_url = download_link.get_attribute("href")
-        filename = get_filename_from_url(download_url)
+        filename = download_link.text
+
+        label_file_path = os.path.join(label_folder, filename)
+        base_download_file_path = os.path.join(base_download_dir, filename)
 
         # Check if file already exists in the label folder
-        if os.path.exists(os.path.join(label_folder, filename)):
+        if os.path.exists(label_file_path):
             print(f"File '{filename}' already exists in '{label_folder}', skipping download.")
             continue  # Skip downloading this file
 
-        print(f"Downloading: {filename}")
-        download_link.click()  # Start the download
-        move_latest_file(label_folder, filename)  # Move the downloaded file to the label folder
+        # Download if file doesn't exist in label folder
+        if os.path.exists(base_download_file_path):
+            print(f"File '{filename}' already exists in '{base_download_dir}', moving to '{label_folder}'.")
+            move_latest_file(label_folder, filename)  # Move the file to the label folder
+        else:
+            print(f"Downloading: {filename}")
+            download_link.click()  # Start the download
+            move_latest_file(label_folder, filename)  # Move the downloaded file to the label folder
+
 
 # Close the browser
-# driver.quit()
+driver.quit()

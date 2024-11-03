@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 Open Command Prompt or Terminal.
 
-Navigate to the directory where main.py is located.
+Navigate to the directory where AIUBDownloader.py is located.
 
 Run the Script
 
